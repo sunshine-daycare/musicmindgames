@@ -295,9 +295,9 @@ groups.forEach(group => {
         status.innerHTML = `Wolne miejsca: ${free} / ${LIMIT}`;
         status.className = "status open";
       } else {
-        status.innerHTML = "Lista rezerwowa";
+        status.innerHTML = "Brak wolnych miejsc";
         status.className = "status full";
-        button.innerText = "Zapisz na listę rezerwową";
+        button.innerText = "Zapisz dziecko na listę rezerwową";
       }
     })
     .catch(() => {
@@ -310,3 +310,4 @@ groups.forEach(group => {
 
 </body>
 </html>
+
