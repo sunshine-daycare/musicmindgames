@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zapisy – Music Mind Games</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #FFF9F2;
+  margin: 0;
+}
+header {
+  background: #FFB347;
+  color: white;
+  padding: 25px;
+  text-align: center;
+  font-size: 1.6em;
+}
+main {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+.group {
+  background: #FFDAB9;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+h3 {
+  margin-top: 0;
+  color: #8B4513;
+}
+.status {
+  font-weight: bold;
+}
+.open {
+  color: green;
+}
+.full {
+  color: red;
+}
+.reserve {
+  color: orange;
+}
+button {
+  background: #8B4513;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+}
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+.note {
+  text-align: center;
+  font-style: italic;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>Zapisy – Music Mind Games 🎵</header>
+
+<main>
+
+<div class="group" id="groupA">
+  <h3>Grupa Jello (3–4 lata)</h3>
+  <p>Wtorki 15:10–15:40</p>
+  <p class="status">Sprawdzanie dostępności...</p>
+  <button class="signup-btn"
+    onclick="window.open('https://forms.gle/gKQ6neHZfRPzbDZc7')">
+    Zapisz dziecko
+  </button>
+</div>
+
+<div class="group" id="groupB">
+  <h3>Grupa Pineapple (4–5 lat)</h3>
+  <p>Wtorki 15:50–16:20</p>
+  <p class="status">Sprawdzanie dostępności...</p>
+  <button class="signup-btn"
+    onclick="window.open('https://forms.gle/Lc7Vz3Y8HDeix8AGA')">
+    Zapisz dziecko
+  </button>
+</div>
+
+<div class="group" id="groupC">
+  <h3>Grupa Huckleberry (5–6 lat)</h3>
+  <p>Wtorki 16:30–17:00</p>
+  <p class="status">Sprawdzanie dostępności...</p>
+  <button class="signup-btn"
+    onclick="window.open('https://forms.gle/j6GGq5GtnqDkjWdp7')">
+    Zapisz dziecko
+  </button>
+</div>
+
+<p class="note">Karnet: 12 zajęć + 1 zajęcia gratis 🎁</p>
+
+</main>
+
+<script>
+const LIMIT = 5;
+
+const groups = [
+  {
+    elementId: "groupA",
+    sheetId: "1SvFfU36xDpV6iOaKuwywR97dtGq1o4jluC9_bh_kG_Y"
+  },
+  {
+    elementId: "groupB",
+    sheetId: "1nhmx0raiJ-e4Jcnq3nkxfsDFRgs90IF74mORxKNImyw"
+  },
+  {
+    elementId: "groupC",
+    sheetId: "1-l1QDJIBz94hiI7KPEGusQNVySREwyBGRxvSv73Vgvw"
+  }
+];
+
+groups.forEach(group => {
+  const API = `https://opensheet.elk.sh/${group.sheetId}/responses`;
+
+  fetch(API)
+    .then(res => res.json())
+    .then(data => {
+
+      const taken = data.length;
+      const free = LIMIT - taken;
+
+      const box = document.getElementById(group.elementId);
+      const status = box.querySelector(".status");
+      const button = box.querySelector(".signup-btn");
+
+      if (free > 0) {
+        status.innerHTML = `Wolne miejsca: ${free} / ${LIMIT}`;
+        status.className = "status open";
+        button.innerText = "Zapisz dziecko";
+      } else {
+        status.innerHTML = "Brak miejsc – zapisy na listę rezerwową";
+        status.className = "status full";
+        button.innerText = "Zapisz dziecko na listę rezerwową";
+      }
+    })
+    .catch(() => {
+      const status = document
+        .getElementById(group.elementId)
+        .querySelector(".status");
+
+      status.innerHTML = "Nie udało się sprawdzić dostępności";
+      status.className = "status reserve";
+    });
+});
+</script>
+
+</body>
+</html>
