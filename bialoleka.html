@@ -13,6 +13,7 @@
     --card-bg: #FFFFFF;
     --accent-sage: #94A684;
     --accent-clay: #D4A373;
+    --accent-blue: #8BA9C3; /* Dodatkowy kolor dla grupy Blue */
     --text-main: #4A4A4A;
     --text-light: #7C7C7C;
   }
@@ -96,6 +97,11 @@
     font-size: 1.6em;
     margin: 0 0 10px 0;
     color: var(--accent-sage);
+  }
+
+  /* Specjalny kolor dla tytułu grupy Blue, żeby pasował do nazwy */
+  #groupD h3 {
+    color: var(--accent-blue);
   }
 
   .time {
@@ -203,12 +209,12 @@
 
 <main>
   <div class="course-info">
-    <p>🗓 <strong>Kiedy:</strong> Wtorki, 24.02 – 19.05.2026</p>
+    <p>🗓 <strong>Kiedy:</strong> Wtorki i Czwartki (zależnie od grupy)</p>
     <p>📍 <strong>Miejsce:</strong> Marywilska 68a, Warszawa</p>
     <p>🎼 <strong>Cykl:</strong> 13 spotkań (12 zajęć + 1 gratis!)</p>
     <span class="price-tag">Koszt karnetu: 799 zł (66,58 zł/1 zajęcia)</span>
     
-  <div class="contact-box">
+    <div class="contact-box">
       <span class="contact-name">Natalia Ziółkowska</span>
       📩 <a href="mailto:sunshine.bilingualdaycare@gmail.com">sunshine.bilingualdaycare@gmail.com</a>
     </div>
@@ -216,7 +222,7 @@
 
   <div class="group" id="groupA">
     <h3>Grupa Jello</h3>
-    <span class="time">3–4 lata • 15:10–15:40</span>
+    <span class="time">Wtorek • 3–4 lata • 15:10–15:40</span>
     <div class="status">Sprawdzanie dostępności...</div>
     <button class="signup-btn" onclick="window.open('https://forms.gle/gKQ6neHZfRPzbDZc7')">
       Zapisz dziecko
@@ -225,7 +231,7 @@
 
   <div class="group" id="groupB">
     <h3>Grupa Pineapple</h3>
-    <span class="time">4–5 lat • 15:55–16:25</span>
+    <span class="time">Wtorek • 4–5 lat • 15:55–16:25</span>
     <div class="status">Sprawdzanie dostępności...</div>
     <button class="signup-btn" onclick="window.open('https://forms.gle/Lc7Vz3Y8HDeix8AGA')">
       Zapisz dziecko
@@ -234,9 +240,18 @@
 
   <div class="group" id="groupC">
     <h3>Grupa Huckleberry</h3>
-    <span class="time">5–6 lat • 16:40–17:10</span>
+    <span class="time">Wtorek • 5–6 lat • 16:40–17:10</span>
     <div class="status">Sprawdzanie dostępności...</div>
     <button class="signup-btn" onclick="window.open('https://forms.gle/j6GGq5GtnqDkjWdp7')">
+      Zapisz dziecko
+    </button>
+  </div>
+
+  <div class="group" id="groupD">
+    <h3>Grupa Blue</h3>
+    <span class="time">Czwartek • 3–6 lat • 16:00–16:30</span>
+    <div class="status">Sprawdzanie dostępności...</div>
+    <button class="signup-btn" onclick="window.open('https://forms.gle/HcDP21jJrAj5SE6D8')">
       Zapisz dziecko
     </button>
   </div>
@@ -252,15 +267,15 @@
       </div>
       <div class="method-item">
         <strong>Sprawny umysł</strong>
-        Zabawy muzyczne świetnie rozwijają pamięć, koncentrację oraz logiczne myślenie, co ułatwia późniejszą naukę w szkole.
+        Zajęcia rozwijają pamięć, koncentrację oraz logiczne myślenie, co ułatwia późniejszą naukę w szkole.
       </div>
       <div class="method-item">
         <strong>Bez stresu</strong>
-        Przygotowujemy grunt pod naukę gry na dowolnym instrumencie. Dzięki temu dziecko uniknie zniechęcenia na początku muzycznej drogi.
+        Przygotowujemy grunt pod naukę gry na instrumencie. Dzięki temu dziecko uniknie zniechęcenia na początku drogi.
       </div>
       <div class="method-item">
         <strong>Relacje i radość</strong>
-        Zajęcia budują pewność siebie. Dzieci uczą się współdziałania w grupie i czerpią radość z tworzenia wspólnych dźwięków.
+        Zajęcia budują pewność siebie. Dzieci uczą się współdziałania i czerpią radość z tworzenia dźwięków.
       </div>
     </div>
   </section>
@@ -277,7 +292,9 @@ const LIMIT = 5;
 const groups = [
   { elementId: "groupA", sheetId: "1SvFfU36xDpV6iOaKuwywR97dtGq1o4jluC9_bh_kG_Y" },
   { elementId: "groupB", sheetId: "1nhmx0raiJ-e4Jcnq3nkxfsDFRgs90IF74mORxKNImyw" },
-  { elementId: "groupC", sheetId: "1-l1QDJIBz94hiI7KPEGusQNVySREwyBGRxvSv73Vgvw" }
+  { elementId: "groupC", sheetId: "1-l1QDJIBz94hiI7KPEGusQNVySREwyBGRxvSv73Vgvw" },
+  // KONFIGURACJA DLA GRUPY BLUE - Wpisz poniżej ID arkusza Google dla czwartku
+  { elementId: "groupD", sheetId: "1buGWGnosaZnA5nbw7pzqmgqh3tFO8ZnjWZqExULZwPM" }
 ];
 
 groups.forEach(group => {
@@ -288,6 +305,8 @@ groups.forEach(group => {
       const taken = Array.isArray(data) ? data.length : 0;
       const free = LIMIT - taken;
       const box = document.getElementById(group.elementId);
+      if (!box) return;
+      
       const status = box.querySelector(".status");
       const button = box.querySelector(".signup-btn");
 
@@ -301,9 +320,12 @@ groups.forEach(group => {
       }
     })
     .catch(() => {
-      const status = document.getElementById(group.elementId).querySelector(".status");
-      status.innerHTML = "Status niedostępny";
-      status.className = "status reserve";
+      const box = document.getElementById(group.elementId);
+      if (box) {
+        const status = box.querySelector(".status");
+        status.innerHTML = "Status niedostępny";
+        status.className = "status reserve";
+      }
     });
 });
 </script>
